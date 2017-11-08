@@ -9,10 +9,8 @@ function [cimg] = corner_detector(img)
 % Output:
 % cimg is a corner matrix
 
-% Write Your Code Here
-
 %convert the image to grayscale 
-img = rgb2gray(img); 
+%img = rgb2gray(img); 
 
 %find the Harris features 
 points = detectHarrisFeatures(img); 
@@ -27,7 +25,7 @@ coordinates = round(points.Location);
 strength = points.Metric; 
 
 %put the strengths into the new image 
-cimg(coordinates(:,2),coordinates(:,1)) = strength(:);
-
+ind = sub2ind(size(cimg),coordinates(:,2),coordinates(:,1));
+cimg(ind) = strength(:);
 
 end
