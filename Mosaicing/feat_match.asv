@@ -1,6 +1,6 @@
 % File name: feat_match.m
-% Author: Kashish Gupta and Rajat Bhageria
-% Date created: 11/8/17
+% Author:
+% Date created:
 
 function [match] = feat_match(descs1, descs2)
 % Input:
@@ -19,14 +19,6 @@ output = zeros(size(descs1, 1), 'uint16');
 
 [idx, d] = knnsearch(descs2, descs1, 'k', 2);
 
-for i = 1:size(idx,1)
-    if d(i,1)/d(i,2) < 0.6
-        output(i) = idx(i,1);
-    else
-        output(i) = -1;
-    end
-end
 
-match = output;
 
 end

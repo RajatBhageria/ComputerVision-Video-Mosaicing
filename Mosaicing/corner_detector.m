@@ -1,6 +1,6 @@
 % File name: corner_detector.m
-% Author:
-% Date created:
+% Author: Kashish Gupta and Rajat Bhageria
+% Date created: 11/7/17
 
 function [cimg] = corner_detector(img)
 % Input:

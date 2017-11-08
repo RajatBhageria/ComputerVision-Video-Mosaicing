@@ -13,5 +13,7 @@ function [descs] = feat_desc(img, x, y)
 %   descs = 64xn matrix of double values with column i being the 64 dimensional
 %   descriptor computed at location (xi, yi) in im
 
-% Write Your Code Here
+
+
+
 end
