@@ -12,8 +12,8 @@ function [y, x, rmax] = anms(cimg, max_pts)
 % rmax = suppression radius used to get max_pts corners
 
 % Write Your Own Code Here
-strengths = cimg(cimg>0);
-featureLocations = 
+strengths = cicimg>0;
+featureLocations = cimg(strengths);
 
 numInitialFeatures = size(strengths, 2);
 
