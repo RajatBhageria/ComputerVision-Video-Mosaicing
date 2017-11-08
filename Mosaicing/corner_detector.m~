@@ -18,16 +18,15 @@ img = rgb2gray(img);
 points = detectHarrisFeatures(img); 
 
 %create a new return image with initial values of zero 
-cimg = zeros(size(img)); 
+newImg = zeros(size(img)); 
 
 %find the coordinates of all the corners 
-coordinates = round(points.Location);
+coordinates = points.Location;
 
 %find the values of the corners 
 strength = points.Metric; 
 
-%put the strengths into the new image 
-cimg(coordinates(:,2),coordinates(:,1)) = strength(:);
+newImg[coordinates]= 
 
 
 end
