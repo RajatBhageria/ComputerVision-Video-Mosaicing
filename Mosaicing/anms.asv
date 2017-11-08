@@ -36,8 +36,7 @@ sorted_radii = sort(radii, 'descend');
 rmax = sorted_radii(max_pts);
 
 if size(feature_locations((radii>=rmax),:), 1) > max_pts
-    radii_greater = sort(radii(radii>rmax));
-    rmax = radii_greater(1);
+    radii_greater = radii(r
 end
 
 y_x = feature_locations((radii>=rmax),:);
