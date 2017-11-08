@@ -9,8 +9,10 @@ function [cimg] = corner_detector(img)
 % Output:
 % cimg is a corner matrix
 
-%convert the image to grayscale 
-%img = rgb2gray(img); 
+%convert the image to grayscale if the input is not
+if size(img, 3) == 3
+    img = rgb2gray(img);
+end
 
 %find the Harris features 
 points = detectHarrisFeatures(img); 
