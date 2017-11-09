@@ -13,4 +13,5 @@ function [X, Y] = apply_homography(H, x, y)
 %   Y : the column coords vector, n*1, in the destination image
 
 % Write Your Code Here
+
 end
