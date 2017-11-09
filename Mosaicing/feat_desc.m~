@@ -79,11 +79,9 @@ for corner = 1:numCorners
     newDimension = 8; 
     resized = imresize(gaussian, [newDimension, newDimension]); 
     
-    %resize the 8x8 patch into a column 
     column  = resized(:); 
     
-    %put the 64x1 column for each feature into the return matrix. 
-    descs(:,corner) = column; 
+    descs(
 end 
 
 end
