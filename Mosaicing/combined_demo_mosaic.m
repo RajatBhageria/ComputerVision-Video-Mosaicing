@@ -6,6 +6,11 @@ function [output_video] = combined_demo_mosaic(video1, video2, video3)
 %first need to pre-process these videos in order to make sure they are the
 %same number of frames
 
+video1 = 'videos/Video1.mp4';
+video2 = 'videos/Video2.mp4';
+video3 = 'videos/Video3.mp4';
+
+
 numFrames = 30;
 all_frames = cell(30,3);
 
@@ -20,9 +25,9 @@ v3.CurrentTime = 0;
 
 
 for i = 1:numFrames
-    all_frames{i, 1} = readFrame(v, 'Grayscale');
-    all_frames{i, 2} = readFrame(v, 'Grayscale');
-    all_frames{i, 3} = readFrame(v, 'Grayscale');
+    all_frames{i, 1} = rgb2gray(readFrame(v1));
+    all_frames{i, 2} = rgb2gray(readFrame(v2));
+    all_frames{i, 3} = rgb2gray(readFrame(v3));
 end
 
 img_mosaic = mymosaic(all_frames);
