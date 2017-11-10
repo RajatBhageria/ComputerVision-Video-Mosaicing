@@ -23,6 +23,8 @@ numCorners = size(x,1);
 %define a windowSize in each direction. 
 windowSize = 20; 
 
+%pad the image so that when we find 40x40 windows, we do not go out of
+%bounds
 img = padarray(img,[windowSize, windowSize],0,'both');
 
 %initialize the final output
