@@ -54,6 +54,9 @@ for corner = 1:numCorners
     %resize the 8x8 patch into a column 
     column  = resized(:); 
     
+    %convert column to double datatype 
+    column = double(column); 
+    
     %normalize the vector 
     column = (column - mean(column))./std(column); 
     

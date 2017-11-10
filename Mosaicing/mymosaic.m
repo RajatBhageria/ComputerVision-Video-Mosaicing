@@ -44,9 +44,18 @@ for i = 1:m
     [match1_2] = feat_match(descs1,descs2);
     [match3_2] = feat_match(descs3,descs2);
     
+    %% take the matches and the xs and ys of the matches 
+    index = (1:size(x1,1))';
+    sourceIndexesOfMatched = index(match1_2~=0); 
+    destIndexesOfMatched = match1_2(sourceIndexesOfMatched); 
+    matchedX1 = x1(sourceIndexesOfMatched); 
+    matchedYI = y1(sourceIndexesOfMatched); 
+    matchedX2 = x2(destIndexesOfMatched);
+    matchedY2 = y2(destIndexesOfMatched); 
+    
     %% RANSAC 
-    thresh = 0.6; 
-    [H_12,inlier_ind_12] = ransac_est_homography(x1,y1,x2,y2,thresh); 
+    thresh = 10; 
+    [H_12,inlier_ind_12] = ransac_est_homography(matchedX1,matchedYI,matchedX2,matchedY2,thresh); 
     [H_32,inlier_ind_23] = ransac_est_homography(x3,y3,x2,y2,thresh);
     
     %% Do Warping 
