@@ -35,18 +35,18 @@ for iter = 1:nRANSAC
     %generate a list of 4 random numbers without repetition between 1 and numFeatures 
     randomNums  = randperm(numFeatures,minNumberOfPointsForHomo); 
     
-    %find the four feature points X, Y for the destination
-    %X and Y is a 4x1 vector 
-    X = x2(randomNums); 
-    Y = y2(randomNums);
-    
     %find the four feature points x,y for the source 
     %x and y is a 4x1 vector 
     x = x1(randomNums); 
     y = y1(randomNums); 
+    
+    %find the four feature points X, Y for the destination
+    %X and Y is a 4x1 vector 
+    X = x2(randomNums); 
+    Y = y2(randomNums);
 
     %find the homography using these four points
-    homographyForSample = est_homography(X,Y,x,y); 
+    homographyForSample = est_homography(x,y,X,Y); 
     
     %appply the homography.
     [XDest, YDest] = apply_homography(homographyForSample, x1, y1);

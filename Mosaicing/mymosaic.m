@@ -64,6 +64,7 @@ for i = 1:m
     matchedY2_32 = y2(destIndexesOfMatched_32); 
     
     %% RANSAC 
+    %% TODO: Problem is that after calling RANSAC, H_12 has only 1/9 values in it. So essentially it's not finding the homography before. 
     thresh = 10; 
     % ransac from 1 to 2 
     [H_12,inlier_ind_12] = ransac_est_homography(matchedX1_12,matchedY1_12,matchedX2_12,matchedY2_12,thresh); 
