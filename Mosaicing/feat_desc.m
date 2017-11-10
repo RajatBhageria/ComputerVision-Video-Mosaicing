@@ -23,8 +23,7 @@ numCorners = size(x,1);
 %define a windowSize in each direction. 
 windowSize = 20; 
 
-%find the size of the image
-[n,m] = size(img); 
+img = padarray(img,[windowSize, windowSize],0,'both');
 
 %initialize the final output
 descs = zeros(64,numCorners); 
@@ -35,39 +34,11 @@ for corner = 1:numCorners
     cornerj = col(corner); 
         
     %find the windowSizex2 by windowSizex2 window 
-    upI = 0; 
-    downI = 0; 
+    upI = corneri - windowSize;
+    downI = corneri + windowSize-1; 
     
-    leftJ = 0; 
-    rightJ = 0; 
-    
-    %upperRow Index 
-    if (corneri - windowSize > 0)
-        upI = corneri - windowSize; 
-    else 
-        upI = 0;
-    end 
-    
-    %lowerRow index 
-    if (corneri + windowSize <= n) 
-        downI = corneri + windowSize-1; 
-    else
-        downI = n; 
-    end
-    
-    %leftCol Index
-    if (cornerj - windowSize > 0)
-        leftJ = cornerj - windowSize; 
-    else 
-        leftJ = 0;
-    end 
-    
-    %rightCol index 
-    if (cornerj + windowSize <= n) 
-        rightJ = cornerj + windowSize-1; 
-    else
-        rightJ = m; 
-    end 
+    leftJ = cornerj - windowSize; 
+    rightJ = cornerj + windowSize-1; 
     
     %select the window 
     window = img(upI:downI, leftJ:rightJ); 
@@ -75,9 +46,8 @@ for corner = 1:numCorners
     %do a gaussian filter of window 
     gaussian = imgaussfilt(window);
     
-    %resize the image to an new size 
-    newDimension = 8; 
-    resized = imresize(gaussian, [newDimension, newDimension]); 
+    %Sample every 5th point in the 40x40 window to get an 8x8
+    resized = gaussian(1:5:end, 1:5:end);
     
     %resize the 8x8 patch into a column 
     column  = resized(:); 
