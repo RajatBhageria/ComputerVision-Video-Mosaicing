@@ -22,12 +22,11 @@ numFeatures = size(x1,1);
 
 %set a maxCost and a best Homography 
 maxNumInliers = 0; 
-bestHomography = zeros(3,3); 
+%bestHomography = zeros(3,3); 
 
-inliers; 
-
-%initialize inlier_ind
-inlier_ind = zeros(4,1); 
+%initialize inlier_ind and list of all indexes 
+indexes = (1:numFeatures)';
+inlier_ind; 
 
 %iterate over nRANSAC iterations 
 for iter = 1:nRANSAC 
@@ -64,14 +63,10 @@ for iter = 1:nRANSAC
     if (numInliers > maxNumInliers)
         maxNumInliers = numInliers; 
         %bestHomography = homographyForSample; 
-        indexes = (1:numFeatures)';
-        inliers = indexes((x2-XDest).^2 + (y2-YDest).^2 < thresh);
-        inlier_ind = randomNums; 
+        inlier_ind = indexes((x2-XDest).^2 + (y2-YDest).^2 < thresh);
     end 
 end 
-
-
-H = est_homography(x1(indexes),y1(indexes), x2(indexes), y2(indexes)); 
-
 %H = bestHomography; 
+H = est_homography(x1(inlier_ind),y1(inlier_ind), x2(inlier_ind), y2(inlier_ind));
+
 end
