@@ -17,7 +17,11 @@ function [X, Y] = apply_homography(H, x, y)
 coordinates = [x'; y'; ones(size(x,1),1)'];
 outputPoints = H * coordinates; 
 
-X = outputPoints(1,:)';
-Y = outputPoints(2,:)';
+x = outputPoints(1,:)';
+y = outputPoints(2,:)';
+Z = outputPoints(3,:)';
+
+X = x./Z; 
+Y = y./Z;
 
 end
