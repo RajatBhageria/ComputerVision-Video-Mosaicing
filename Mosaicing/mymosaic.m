@@ -14,7 +14,7 @@ function [img_mosaic] = mymosaic(img_input)
 % n = 3 if the number of input videos is 3 
 [m,n] = size(img_input); 
 
-max_points = 300; 
+max_pts = 300; 
 
 %% Loop over all the images 
 for i = 1:m 
@@ -27,7 +27,7 @@ for i = 1:m
     cimg = corner_detector(img); 
 
     %% Do adaptive non max supression 
-    [x,y,rmax] = anms(cimg,max_pts); 
+    [y,x,rmax] = anms(cimg,max_pts); 
 
     %% Find the feature descriptors
     [descs] = feat_desc(img,x,y); 

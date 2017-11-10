@@ -25,15 +25,15 @@ windowSize = 20;
 
 %pad the image so that when we find 40x40 windows, we do not go out of
 %bounds
-img = padarray(img,[windowSize, windowSize],0,'both');
+imgPadded = padarray(img,[windowSize, windowSize],0,'both');
 
 %initialize the final output
 descs = zeros(64,numCorners); 
 
 %find a feature descriptor for each of the corners
 for corner = 1:numCorners
-    corneri = row(corner); 
-    cornerj = col(corner); 
+    corneri = row(corner) + windowSize; 
+    cornerj = col(corner) + windowSize; 
         
     %find the windowSizex2 by windowSizex2 window 
     upI = corneri - windowSize;
@@ -43,7 +43,7 @@ for corner = 1:numCorners
     rightJ = cornerj + windowSize-1; 
     
     %select the window 
-    window = img(upI:downI, leftJ:rightJ); 
+    window = imgPadded(upI:downI, leftJ:rightJ); 
     
     %do a gaussian filter of window 
     gaussian = imgaussfilt(window);
