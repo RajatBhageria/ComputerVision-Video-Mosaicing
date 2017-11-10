@@ -54,6 +54,9 @@ for corner = 1:numCorners
     %resize the 8x8 patch into a column 
     column  = resized(:); 
     
+    %normalize the vector 
+    column = (column - mean(column))./std(column); 
+    
     %put the 64x1 column for each feature into the return matrix. 
     descs(:,corner) = column; 
 end 
