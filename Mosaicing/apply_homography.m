@@ -14,5 +14,10 @@ function [X, Y] = apply_homography(H, x, y)
 
 % Write Your Code Here
 
+coordinates = [x'; y'; ones(size(x,1),1)'];
+outputPoints = H * coordinates; 
+
+X = outputPoints(1,:)';
+Y = outputPoints(2,:)';
 
 end
