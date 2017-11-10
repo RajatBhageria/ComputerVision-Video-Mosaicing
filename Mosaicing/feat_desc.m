@@ -1,6 +1,6 @@
 % File name: feat_desc.m
-% Author:
-% Date created:
+% Author: Rajat Bhageria and Kashish Gupta
+% Date created: Nov 8th 2017 
 
 function [descs] = feat_desc(img, x, y)
 % Input:
