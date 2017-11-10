@@ -46,17 +46,29 @@ for i = 1:m
     
     %% take the matches and the xs and ys of the matches 
     index = (1:size(x1,1))';
-    sourceIndexesOfMatched = index(match1_2~=0); 
-    destIndexesOfMatched = match1_2(sourceIndexesOfMatched); 
-    matchedX1 = x1(sourceIndexesOfMatched); 
-    matchedYI = y1(sourceIndexesOfMatched); 
-    matchedX2 = x2(destIndexesOfMatched);
-    matchedY2 = y2(destIndexesOfMatched); 
+    
+    %for the first warp 
+    sourceIndexesOfMatched_12 = index(match1_2~=0); 
+    destIndexesOfMatched_12 = match1_2(sourceIndexesOfMatched_12); 
+    matchedX1_12 = x1(sourceIndexesOfMatched_12); 
+    matchedY1_12 = y1(sourceIndexesOfMatched_12); 
+    matchedX2_12 = x2(destIndexesOfMatched_12);
+    matchedY2_12 = y2(destIndexesOfMatched_12); 
+    
+    %for the second warp 
+    sourceIndexesOfMatched_32 = index(match3_2~=0); 
+    destIndexesOfMatched_32 = match3_2(sourceIndexesOfMatched_32); 
+    matchedX3_32 = x3(sourceIndexesOfMatched_32); 
+    matchedY3_32 = y3(sourceIndexesOfMatched_32); 
+    matchedX2_32 = x2(destIndexesOfMatched_32);
+    matchedY2_32 = y2(destIndexesOfMatched_32); 
     
     %% RANSAC 
     thresh = 10; 
-    [H_12,inlier_ind_12] = ransac_est_homography(matchedX1,matchedYI,matchedX2,matchedY2,thresh); 
-    [H_32,inlier_ind_23] = ransac_est_homography(x3,y3,x2,y2,thresh);
+    % ransac from 1 to 2 
+    [H_12,inlier_ind_12] = ransac_est_homography(matchedX1_12,matchedY1_12,matchedX2_12,matchedY2_12,thresh); 
+    % ransac from 3 to 2 
+    [H_32,inlier_ind_23] = ransac_est_homography(matchedX3_32,matchedY3_32,matchedX2_32,matchedY2_32,thresh);
     
     %% Do Warping 
     leftWarped = imwarp(img1, projective2d(H_12)); 
