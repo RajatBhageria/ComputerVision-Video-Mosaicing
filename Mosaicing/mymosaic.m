@@ -21,9 +21,9 @@ img_mosaic = cell(m,1);
 %% Loop over all the frames
 for i = 1:m 
     %% Find the image 
-    img1 = img_input{i,1};
-    img2 = img_input{i,2};
-    img3 = img_input{i,3};
+    img1 = rgb2gray(img_input{i,1});
+    img2 = rgb2gray(img_input{i,2});
+    img3 = rgb2gray(img_input{i,3});
 
     %% find corners for image 
     cimg1 = corner_detector(img1);

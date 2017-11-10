@@ -46,7 +46,7 @@ for iter = 1:nRANSAC
     Y = y2(randomNums);
 
     %find the homography using these four points
-    homographyForSample = est_homography(x,y,X,Y); 
+    homographyForSample = est_homography(X,Y,x,y); 
     
     %appply the homography.
     [XDest, YDest] = apply_homography(homographyForSample, x1, y1);
