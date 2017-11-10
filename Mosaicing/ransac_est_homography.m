@@ -26,7 +26,7 @@ maxNumInliers = 0;
 
 %initialize inlier_ind and list of all indexes 
 indexes = (1:numFeatures)';
-inlier_ind; 
+inlier_ind=[]; 
 
 %iterate over nRANSAC iterations 
 for iter = 1:nRANSAC 

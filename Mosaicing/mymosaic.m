@@ -12,9 +12,11 @@ function [img_mosaic] = mymosaic(img_input)
 
 % m = total number of frames in the video 
 % n = 3 if the number of input videos is 3 
-[m,n] = size(img_input); 
+[m,~] = size(img_input); 
 
-max_points = 300; 
+max_pts = 300; 
+
+img_mosaic = cell(m,1); 
 
 %% Loop over all the frames
 for i = 1:m 
@@ -29,9 +31,9 @@ for i = 1:m
     cimg3 = corner_detector(img3);
 
     %% Do adaptive non max supression 
-    [y1,x1,rmax1] = anms(cimg1,max_pts);
-    [y2,x2,rmax2] = anms(cimg2,max_pts); 
-    [y3,x3,rmax3] = anms(cimg3,max_pts); 
+    [y1,x1,~] = anms(cimg1,max_pts);
+    [y2,x2,~] = anms(cimg2,max_pts); 
+    [y3,x3,~] = anms(cimg3,max_pts); 
 
     %% Find the feature descriptors
     [descs1] = feat_desc(img1,x1,y1); 
@@ -39,8 +41,21 @@ for i = 1:m
     [descs3] = feat_desc(img3,x3,y3); 
 
     %% Find match between last two images
-    [match1_2] = feat_desc(descs1,descs2);
-    [match3_2] = feat_desc(descs3,descs2);
+    [match1_2] = feat_match(descs1,descs2);
+    [match3_2] = feat_match(descs3,descs2);
     
-    %% 
+    %% RANSAC 
+    thresh = 0.6; 
+    [H_12,inlier_ind_12] = ransac_est_homography(x1,y1,x2,y2,thresh); 
+    [H_32,inlier_ind_23] = ransac_est_homography(x3,y3,x2,y2,thresh);
+    
+    %% Do Warping 
+    leftWarped = imwarp(img1, projective2d(H_12)); 
+    rightWarped = imwarp(img3, projective2d(H_32)); 
+    
+    %% Stitch all the images togther
+    mosaic = [leftWarped img2 rightWarped]; 
+    
+    %% Add to the output 
+    img_mosaic{i} = mosaic; 
 end
