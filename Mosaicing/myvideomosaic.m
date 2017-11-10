@@ -1,6 +1,5 @@
 function [video_mosaic] = myvideomosaic(img_mosaic)
 % INPUT: img_mosaic is an mx1 cell array of all the image files 
-
 % OUTPUT: video_mosaic is the video file in .avi format
 
 h_avi = VideoWriter('finalVideo.avi', 'Uncompressed AVI');

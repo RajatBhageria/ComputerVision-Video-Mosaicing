@@ -10,28 +10,23 @@ function [img_mosaic] = mymosaic(img_input)
 % Output:
 % img_mosaic is the output mosaic
 
-% m = total number of frames in the video 
-% n = 3 if the number of input videos is 3 
-[m,n] = size(img_input); 
-
-max_points = 300; 
+numImages = size(img_input, 1); 
 
 %% Loop over all the images 
-for i = 1:m 
+for i = 1: numImages
     %% Find the image 
-    img1 = img_input{i,1};
-    img2 = img_input{i,2};
-    img3 = img_input{i,3};
-
-    %% find corners for image 
-    cimg = corner_detector(img); 
+    img = img_input{i};
+    
+    %% Corner Detector for 
+    cimg = corner_detector(img_input); 
 
     %% Do adaptive non max supression 
+    max_points = 300; 
     [x,y,rmax] = anms(cimg,max_pts); 
 
     %% Find the feature descriptors
     [descs] = feat_desc(img,x,y); 
 
-    %% Find match between last two images
-    [match] = feat_desc(descs1,descs2);
+    %% [match]=feat_desc(descs1,descs2)
+
 end
