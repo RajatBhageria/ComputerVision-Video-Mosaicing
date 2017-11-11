@@ -46,19 +46,19 @@ for i = 1:m
     [descs3] = feat_desc(img3G,x3,y3); 
 
     %% Find match between last two images
-    [match1_2] = feat_match(descs2,descs1);
+    [match2_1] = feat_match(descs2,descs1);
     [match3_2] = feat_match(descs3,descs2);
     
     %% take the matches and the xs and ys of the matches 
     index = (1:size(x1,1))';
     
     %for the first warp 
-    sourceIndexesOfMatched_12 = index(match1_2~=-1); 
-    destIndexesOfMatched_12 = match1_2(sourceIndexesOfMatched_12); 
-    matchedX2_12 = x2(sourceIndexesOfMatched_12);
-    matchedY2_12 = y2(sourceIndexesOfMatched_12); 
-    matchedX1_12 = x1(destIndexesOfMatched_12); 
-    matchedY1_12 = y1(destIndexesOfMatched_12); 
+    sourceIndexesOfMatched_21 = index(match2_1~=-1); 
+    destIndexesOfMatched_21 = match2_1(sourceIndexesOfMatched_21); 
+    matchedX2_21 = x2(sourceIndexesOfMatched_21);
+    matchedY2_21 = y2(sourceIndexesOfMatched_21); 
+    matchedX1_21 = x1(destIndexesOfMatched_21); 
+    matchedY1_21 = y1(destIndexesOfMatched_21); 
     
     %for the second warp 
     sourceIndexesOfMatched_32 = index(match3_2~=-1); 
@@ -71,9 +71,9 @@ for i = 1:m
     %% RANSAC 
     thresh = 5; 
     % ransac from 2 to 1  
-    [H_12,inlier_ind_12] = ransac_est_homography(matchedX2_12,matchedY2_12,matchedX1_12,matchedY1_12,thresh); 
+    [H_12,inlier_ind_12] = ransac_est_homography(matchedX2_21,matchedY2_21,matchedX1_21,matchedY1_21,thresh); 
     % ransac from 3 to 2 
-    [H_32,inlier_ind_23] = ransac_est_homography(matchedX3_32,matchedY3_32,matchedX2_32,matchedY2_32,thresh);
+    [H_32,inlier_ind_23] = ransac_est_homography(matchedX2_32,matchedY2_32,matchedX3_32,matchedY3_32,thresh);
     
     %% Make sure H33 is 1 
     H_12 = (1/H_12(3,3))*H_12;
@@ -89,27 +89,33 @@ for i = 1:m
     %% Stitch all the images togther 
     %find the size of the mosaic 
     [nLeft, mLeft,~] = size(leftWarped); 
-    [n,m] = size(img2); 
+    [n,m,~] = size(img2); 
     [nRight, mRight,~] = size(rightWarped); 
         
     width = max([mLeft, m, mRight]);
     height = max([nLeft, n, nRight]);
     
-    mosaic = zeros([height, width, 3],'like', img1); 
+    mosaic = zeros([height, mLeft+m+mRight, 3]); 
         
-    blender  = vision.AlphaBlender('Operation', 'Binary mask', 'MaskSource', 'Input port');
+%    blender  = vision.AlphaBlender('Operation', 'Binary mask', 'MaskSource', 'Input port');
+%    
+%     %image 1 
+%     mask = imwarp(true(size(img1,1),size(img1,2)), tformLeft, 'OutputView', imref2d1);
+%     mosaic = step(blender, mosaic, leftWarped, mask);
+%     
+%     %image 2 
+%     mask = ones(size(img2),'like', mask); 
+%     mosaic = step(blender, mosaic, img2, mask);
+%    
+%     %image 3
+%     mask = imwarp(true(size(img3,1),size(img3,2)), tformRight, 'OutputView', imref2d2);
+%     mosaic = step(blender, mosaic, rightWarped, mask);
     
-    %image 1 
-    mask = imwarp(true(size(img1,1),size(img1,2)), tformLeft, 'OutputView', imref2d1);
-    mosaic = step(blender, mosaic, leftWarped, mask);
-    
-    %image 2 
-    mask = ones(size(img2),'like', mask); 
-    mosaic = step(blender, mosaic, img2, mask);
-   
-    %image 3
-    mask = imwarp(true(size(img3,1),size(img3,2)), tformRight, 'OutputView', imref2d2);
-    mosaic = step(blender, mosaic, rightWarped, mask);
+    mosaic(1:nLeft,1:mLeft,:) = leftWarped; 
+    mosaic(1:n,mLeft:(m+mLeft-1),:) = img2; 
+    mosaic(1:nRight,m+mLeft:m+mLeft+mRight-1,:) = rightWarped; 
+    mosaic = uint8(mosaic); 
+    imshow(mosaic); 
     
     %% Add to the output 
     img_mosaic{i} = mosaic; 
