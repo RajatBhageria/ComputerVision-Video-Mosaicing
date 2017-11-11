@@ -46,7 +46,7 @@ for i = 1:m
     [descs3] = feat_desc(img3G,x3,y3); 
 
     %% Find match between last two images
-    [match1_2] = feat_match(descs2,descs1);
+    [match1_2] = feat_match(descs);
     [match3_2] = feat_match(descs3,descs2);
     
     %% take the matches and the xs and ys of the matches 
@@ -55,10 +55,10 @@ for i = 1:m
     %for the first warp 
     sourceIndexesOfMatched_12 = index(match1_2~=-1); 
     destIndexesOfMatched_12 = match1_2(sourceIndexesOfMatched_12); 
-    matchedX2_12 = x2(sourceIndexesOfMatched_12);
-    matchedY2_12 = y2(sourceIndexesOfMatched_12); 
-    matchedX1_12 = x1(destIndexesOfMatched_12); 
-    matchedY1_12 = y1(destIndexesOfMatched_12); 
+    matchedX1_12 = x1(sourceIndexesOfMatched_12); 
+    matchedY1_12 = y1(sourceIndexesOfMatched_12); 
+    matchedX2_12 = x2(destIndexesOfMatched_12);
+    matchedY2_12 = y2(destIndexesOfMatched_12); 
     
     %for the second warp 
     sourceIndexesOfMatched_32 = index(match3_2~=-1); 
@@ -70,21 +70,23 @@ for i = 1:m
     
     %% RANSAC 
     thresh = 5; 
-    % ransac from 2 to 1  
-    [H_12,inlier_ind_12] = ransac_est_homography(matchedX2_12,matchedY2_12,matchedX1_12,matchedY1_12,thresh); 
+    % ransac from 1 to 2 
+    %WHEN WANG NO HOLES BUT NEGATIVE 
+    [H_12,inlier_ind_12] = ransac_est_homography(matchedX1_12,matchedY1_12,matchedX2_12,matchedY2_12,thresh); 
+    %WHEN WANT HOLES BUT TRANSFORMATION CORRECG %[H_12,inlier_ind_12] = ransac_est_homography(matchedX1_12,matchedY1_12,matchedX2_12,matchedY2_12,thresh); 
     % ransac from 3 to 2 
     [H_32,inlier_ind_23] = ransac_est_homography(matchedX3_32,matchedY3_32,matchedX2_32,matchedY2_32,thresh);
     
     %% Make sure H33 is 1 
     H_12 = (1/H_12(3,3))*H_12;
     H_32 = (1/H_32(3,3))*H_32;
-    
+
     %% Transform the two images 
     tformLeft = projective2d(H_12'); 
-    [leftWarped,imref2d1] = imwarp(img1, tformLeft); 
+    leftWarped = imwarp(img1, tformLeft,'OutputView', panoramaView); 
     
     tformRight = projective2d(H_32'); 
-    [rightWarped, imref2d2] = imwarp(img3, tformRight); 
+    rightWarped = imwarp(img3, tformRight,'OutputView', panoramaView); 
     
     %% Stitch all the images togther 
     %find the size of the mosaic 
@@ -96,20 +98,9 @@ for i = 1:m
     height = max([nLeft, n, nRight]);
     
     mosaic = zeros([height, width, 3],'like', img1); 
-        
+    
     blender  = vision.AlphaBlender('Operation', 'Binary mask', 'MaskSource', 'Input port');
     
-    %image 1 
-    mask = imwarp(true(size(img1,1),size(img1,2)), tformLeft, 'OutputView', imref2d1);
-    mosaic = step(blender, mosaic, leftWarped, mask);
-    
-    %image 2 
-    mask = ones(size(img2),'like', mask); 
-    mosaic = step(blender, mosaic, img2, mask);
-   
-    %image 3
-    mask = imwarp(true(size(img3,1),size(img3,2)), tformRight, 'OutputView', imref2d2);
-    mosaic = step(blender, mosaic, rightWarped, mask);
     
     %% Add to the output 
     img_mosaic{i} = mosaic; 
