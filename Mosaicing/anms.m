@@ -14,7 +14,7 @@ function [y, x, rmax] = anms(cimg, max_pts)
 [n,m] = size(cimg);
 [C,R] = meshgrid(1:m,1:n); %calling these vectors row, column, rather than the usual X,Y
 feature_locations = [R(cimg~=0),C(cimg~=0)];
-max_value = max(unique(cimg))*0.9;
+max_value = max(max(cimg))*0.9;
 
 num_features = size(feature_locations, 1);
 radii = zeros(num_features, 1); 
