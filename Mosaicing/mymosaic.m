@@ -80,6 +80,16 @@ for i = 1:m
     H_32 = (1/H_32(3,3))*H_32;
     
     %% Transform the two images 
+    tformLeft = projective2d(H_12'); 
+    [leftWarped,imref2d1] = imwarp(img1, tformLeft); 
+    
+    tformRight = projective2d(H_32'); 
+    [rightWarped, imref2d2] = imwarp(img3, tformRight);
+    
+    tformMid = projective2d(eye(3));
+    [middle, imref2dmid] = imwarp(img2, tformMid);
+    
+    %% Transform the two images 
     [leftFused, RCLeft] = imfuse(leftWarped, imref2d1, middle, imref2dmid,'blend'); 
     [rightFused, RCRight] = imfuse(middle, imref2dmid, rightWarped, imref2d2,'blend'); 
     [mosaic , ~] = imfuse(leftFused, RCLeft, rightFused, RCRight,'blend'); 
