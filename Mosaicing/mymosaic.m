@@ -111,7 +111,7 @@ for i = 1:m
     warped_img3_y(warped_img3_y<1) = 1; 
     
     for ind = 1:size(warped_img3_x(:),1)
-        rightWarped(warped_img3_y(ind), warped_img3_x(ind),:) = img1(img3_y(ind), img3_x(ind),:);
+        rightWarped(warped_img3_y(ind), warped_img3_x(ind),:) = img3(img3_y(ind), img3_x(ind),:);
     end
     rightWarped = uint8(rightWarped); 
     
