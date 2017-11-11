@@ -53,7 +53,7 @@ for i = 1:m
     index = (1:size(x1,1))';
     
     %for the first warp 
-    sourceIndexesOfMatched_12 = index(match1_2~=0); 
+    sourceIndexesOfMatched_12 = index(match1_2~=-1); 
     destIndexesOfMatched_12 = match1_2(sourceIndexesOfMatched_12); 
     matchedX1_12 = x1(sourceIndexesOfMatched_12); 
     matchedY1_12 = y1(sourceIndexesOfMatched_12); 
@@ -61,7 +61,7 @@ for i = 1:m
     matchedY2_12 = y2(destIndexesOfMatched_12); 
     
     %for the second warp 
-    sourceIndexesOfMatched_32 = index(match3_2~=0); 
+    sourceIndexesOfMatched_32 = index(match3_2~=-1); 
     destIndexesOfMatched_32 = match3_2(sourceIndexesOfMatched_32); 
     matchedX3_32 = x3(sourceIndexesOfMatched_32); 
     matchedY3_32 = y3(sourceIndexesOfMatched_32); 
@@ -94,9 +94,26 @@ for i = 1:m
         leftWarped(warped_img1_y(ind), warped_img1_x(ind),:) = img1(img1_y(ind), img1_x(ind),:);
     end
     leftWarped = uint8(leftWarped); 
-   
     
     %% do warping for the right image 
+    [r,c,n] = size(img3);
+    [img3_x,img3_y] = meshgrid(1:c,1:r);
+    H_32 = (1/H_32(3,3))*H_32;
+    [warped_img3_x, warped_img3_y] = apply_homography(H_32, img3_x(:), img3_y(:));
+    
+    %round the coordinates  
+    warped_img3_x = round(warped_img3_x); 
+    warped_img3_y = round(warped_img3_y); 
+    
+    %take care of negatives 
+    rightWarped = zeros(size(img3));
+    warped_img3_x(warped_img3_x<1) = 1;
+    warped_img3_y(warped_img3_y<1) = 1; 
+    
+    for ind = 1:size(warped_img3_x(:),1)
+        rightWarped(warped_img3_y(ind), warped_img3_x(ind),:) = img1(img3_y(ind), img3_x(ind),:);
+    end
+    rightWarped = uint8(rightWarped); 
     
     %% Stitch all the images togther
     mosaic = [leftWarped img2 rightWarped]; 
