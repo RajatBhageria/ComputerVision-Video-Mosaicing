@@ -72,16 +72,11 @@ for i = 1:m
     [H_32,inlier_ind_23] = ransac_est_homography(matchedX3_32,matchedY3_32,matchedX2_32,matchedY2_32,thresh);
     
     %% Do Warping 
-    [r,c] = size(img1);
-    [img1_x,img1_y] = meshgrid(1:c,1:r);
-    [warped_img1_x, warped_img1_y] = apply_homography(H_12, img1_x(:), img1_y(:));
-    warped_img_1 = zeros(size(img1));
-    for ind = 1:size(img1_x(:),1)
-        warped_img_1(round(warped_img1_y(ind)), round(warped_img1_x(ind))) = img1(img1_y(ind), img1_x(ind));
-    end
-    
-    %leftWarped = imwarp(img1, projective2d(H_12)); 
-    %rightWarped = imwarp(img3, projective2d(H_32)); 
+    [r,c] = size(im2);
+    [img1_x,y] = meshgrid(1:c,1:r);
+    [warped_img1_x, warped_img1_y] = apply_homograph(H_12, img1_x, img2_y);
+    leftWarped = imwarp(img1, projective2d(H_12)); 
+    rightWarped = imwarp(img3, projective2d(H_32)); 
     
     %% Stitch all the images togther
     mosaic = [leftWarped img2 rightWarped]; 
