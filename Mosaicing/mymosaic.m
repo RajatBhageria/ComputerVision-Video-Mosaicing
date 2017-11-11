@@ -71,7 +71,9 @@ for i = 1:m
     %% RANSAC 
     thresh = 5; 
     % ransac from 1 to 2 
-    [H_12,inlier_ind_12] = ransac_est_homography(matchedX1_12,matchedY1_12,matchedX2_12,matchedY2_12,thresh); 
+    %WHEN WANG NO HOLES BUT NEGATIVE 
+    [H_12,inlier_ind_12] = ransac_est_homography(matchedX2_12,matchedY2_12,matchedX1_12,matchedY1_12,thresh); 
+    %WHEN WANT HOLES BUT TRANSFORMATION CORRECG %[H_12,inlier_ind_12] = ransac_est_homography(matchedX1_12,matchedY1_12,matchedX2_12,matchedY2_12,thresh); 
     % ransac from 3 to 2 
     [H_32,inlier_ind_23] = ransac_est_homography(matchedX3_32,matchedY3_32,matchedX2_32,matchedY2_32,thresh);
     
@@ -96,7 +98,7 @@ for i = 1:m
     leftWarped = uint8(leftWarped); 
     
     %% do warping for the right image 
-    [r,c,n] = size(img3);
+    [r,c,~] = size(img3);
     [img3_x,img3_y] = meshgrid(1:c,1:r);
     H_32 = (1/H_32(3,3))*H_32;
     [warped_img3_x, warped_img3_y] = apply_homography(H_32, img3_x(:), img3_y(:));
@@ -115,8 +117,11 @@ for i = 1:m
     end
     rightWarped = uint8(rightWarped); 
     
-    %% Stitch all the images togther
-    mosaic = [leftWarped img2 rightWarped]; 
+    %% Stitch all the images togther 
+    [n,m] = size(img2); 
+    leftWarpedResized = imresize(leftWarped, [n,m]); 
+    rightWarpedResized = imresize(rightWarped, [n,m]); 
+    mosaic = [leftWarpedResized img2 rightWarpedResized]; 
     
     %% Add to the output 
     img_mosaic{i} = mosaic; 
