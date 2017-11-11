@@ -20,7 +20,7 @@ output = zeros(size(descs1, 1), 1, 'uint16');
 [idx, d] = knnsearch(descs2, descs1, 'k', 2);
 
 for i = 1:size(idx,1)
-    if d(i,1)/d(i,2) < 0.6
+    if d(i,1)/d(i,2) < 0.8
         output(i) = idx(i,1);
     else
         output(i) = -1;
