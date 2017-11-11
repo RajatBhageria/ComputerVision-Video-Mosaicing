@@ -72,56 +72,26 @@ for i = 1:m
     thresh = 5; 
     % ransac from 1 to 2 
     %WHEN WANG NO HOLES BUT NEGATIVE 
-    [H_12,inlier_ind_12] = ransac_est_homography(matchedX2_12,matchedY2_12,matchedX1_12,matchedY1_12,thresh); 
+    [H_12,inlier_ind_12] = ransac_est_homography(matchedX1_12,matchedY1_12,matchedX2_12,matchedY2_12,thresh); 
     %WHEN WANT HOLES BUT TRANSFORMATION CORRECG %[H_12,inlier_ind_12] = ransac_est_homography(matchedX1_12,matchedY1_12,matchedX2_12,matchedY2_12,thresh); 
     % ransac from 3 to 2 
     [H_32,inlier_ind_23] = ransac_est_homography(matchedX3_32,matchedY3_32,matchedX2_32,matchedY2_32,thresh);
     
-    %% Do Warping for left image 
-    [r,c,n] = size(img1);
-    [img1_x,img1_y] = meshgrid(1:c,1:r);
+    %% Make sure H33 is 1 
     H_12 = (1/H_12(3,3))*H_12;
-    [warped_img1_x, warped_img1_y] = apply_homography(H_12, img1_x(:), img1_y(:));
-    
-    %round the coordinates  
-    warped_img1_x = round(warped_img1_x); 
-    warped_img1_y = round(warped_img1_y); 
-    
-    %take care of negatives 
-    leftWarped = zeros(size(img1));
-    warped_img1_x(warped_img1_x<1) = 1;
-    warped_img1_y(warped_img1_y<1) = 1; 
-    
-    for ind = 1:size(warped_img1_x(:),1)
-        leftWarped(warped_img1_y(ind), warped_img1_x(ind),:) = img1(img1_y(ind), img1_x(ind),:);
-    end
-    leftWarped = uint8(leftWarped); 
-    
-    %% do warping for the right image 
-    [r,c,~] = size(img3);
-    [img3_x,img3_y] = meshgrid(1:c,1:r);
     H_32 = (1/H_32(3,3))*H_32;
-    [warped_img3_x, warped_img3_y] = apply_homography(H_32, img3_x(:), img3_y(:));
+
+    %% Transform the two images 
+    tformLeft = projective2d(H_12'); 
+    leftWarped = imwarp(img1, tformLeft); 
     
-    %round the coordinates  
-    warped_img3_x = round(warped_img3_x); 
-    warped_img3_y = round(warped_img3_y); 
-    
-    %take care of negatives 
-    rightWarped = zeros(size(img3));
-    warped_img3_x(warped_img3_x<1) = 1;
-    warped_img3_y(warped_img3_y<1) = 1; 
-    
-    for ind = 1:size(warped_img3_x(:),1)
-        rightWarped(warped_img3_y(ind), warped_img3_x(ind),:) = img3(img3_y(ind), img3_x(ind),:);
-    end
-    rightWarped = uint8(rightWarped); 
+    tformRight = projective2d(H_32'); 
+    rightWarped = imwarp(img3, tformRight); 
     
     %% Stitch all the images togther 
     [n,m] = size(img2); 
-    leftWarpedResized = imresize(leftWarped, [n,m]); 
-    rightWarpedResized = imresize(rightWarped, [n,m]); 
-    mosaic = [leftWarpedResized img2 rightWarpedResized]; 
+    
+        
     
     %% Add to the output 
     img_mosaic{i} = mosaic; 
