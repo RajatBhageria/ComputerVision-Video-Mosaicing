@@ -71,7 +71,7 @@ for i = 1:m
     %% RANSAC 
     thresh = 5; 
     % ransac from 1 to 2 
-    [H_12,inlier_ind_12] = ransac_est_homography(matchedX2_12,matchedY2_12,matchedX1_12,matchedY1_12,thresh); 
+    [H_12,inlier_ind_12] = ransac_est_homography(matchedX1_12,matchedY1_12,matchedX2_12,matchedY2_12,thresh); 
     % ransac from 3 to 2 
     [H_32,inlier_ind_23] = ransac_est_homography(matchedX3_32,matchedY3_32,matchedX2_32,matchedY2_32,thresh);
     
