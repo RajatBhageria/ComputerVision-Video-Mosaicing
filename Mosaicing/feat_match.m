@@ -15,7 +15,7 @@ function [match] = feat_match(descs1, descs2)
 descs1 = descs1';
 descs2 = descs2';
 
-output = zeros(size(descs1, 1), 1, 'uint16');
+output = zeros(size(descs1, 1), 1);
 
 [idx, d] = knnsearch(descs2, descs1, 'k', 2);
 
