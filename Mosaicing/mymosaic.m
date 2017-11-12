@@ -14,12 +14,12 @@ function [img_mosaic] = mymosaic(img_input)
 % n = 3 if the number of input videos is 3 
 [m,~] = size(img_input); 
 
-max_pts = 500; 
+max_pts = 300; 
 
 img_mosaic = cell(m,1); 
 
 %% Loop over all the frames
-for i = 1:m 
+for i = 1:10
     %% Find the image 
     img1 = img_input{i,1};
     img2 = img_input{i,2};
@@ -92,7 +92,9 @@ for i = 1:m
     %% Transform the two images 
     [leftFused, RCLeft] = imfuse(leftWarped, imref2d1, middle, imref2dmid,'blend'); 
     [rightFused, RCRight] = imfuse(middle, imref2dmid, rightWarped, imref2d2,'blend'); 
-    [mosaic , ~] = imfuse(leftFused, RCLeft, rightFused, RCRight,'blend'); 
+    [mosaic , ~] = imfuse(leftFused, RCLeft, rightFused, RCRight,'blend');
+    mosaic = imresize(mosaic, [1500, 3500]);
+    mosaic = imresize(mosaic, 0.5);
   
     %% Add to the output 
     img_mosaic{i} = mosaic; 

@@ -26,8 +26,11 @@ v3.CurrentTime = 0;
 
 for i = 1:numFrames
     all_frames{i, 1} = readFrame(v1);
+    readFrame(v1);
     all_frames{i, 2} = readFrame(v2);
+    readFrame(v2);
     all_frames{i, 3} = readFrame(v3);
+    readFrame(v3);
 end
 
 img_mosaic = mymosaic(all_frames);

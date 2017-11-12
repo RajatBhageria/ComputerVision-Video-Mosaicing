@@ -7,7 +7,7 @@ h_avi.FrameRate = 10;
 h_avi.open();
 
 for i = 1:size(img_mosaic,1)
-    writeVideo(h_avi,uint8(img_mosaic{i}))
+    writeVideo(h_avi, img_mosaic{i})
 end 
 
 close(h_avi);
@@ -15,5 +15,6 @@ close(h_avi);
 %%CHECK!!! 
 video_mosaic = h_avi.path; 
 
+clear h_avi;
 end
 
