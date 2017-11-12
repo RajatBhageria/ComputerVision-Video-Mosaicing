@@ -1,1 +1,4 @@
 Note that we based a lot of our code for the iamge stiching part of the assignment on https://www.mathworks.com/help/vision/examples/feature-based-panoramic-image-stitching.html 
+
+Run combined_demo_mosaic.m in order to see the demo script run on the 3 test videos that were provided by the TAs. It looks great!
+Basically we take the code in mymosaic and pass it through myvideomosaic to receive an output!

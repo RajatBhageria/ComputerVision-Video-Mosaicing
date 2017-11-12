@@ -31,6 +31,11 @@ strength = points.Metric;
 ind = sub2ind(size(cimg),coordinates(:,2),coordinates(:,1));
 cimg(ind) = strength(:);
 
+
 %points1(points1<0) = 0;
+%sortt = sort(points1(:));
+%sixth = sortt(size(sortt, 1)*0.94);
+%points1(points1<sixth) = 0;
 %cimg = points1;
+
 end

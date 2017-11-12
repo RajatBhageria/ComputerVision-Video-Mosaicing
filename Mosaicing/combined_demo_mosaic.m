@@ -11,8 +11,8 @@ video2 = 'videos/Video2.mp4';
 video3 = 'videos/Video3.mp4';
 
 
-numFrames = 30;
-all_frames = cell(30,3);
+numFrames = 23;
+all_frames = cell(23,3);
 
 v1 = VideoReader(video1);
 v1.CurrentTime = 0;
@@ -26,11 +26,8 @@ v3.CurrentTime = 0;
 
 for i = 1:numFrames
     all_frames{i, 1} = readFrame(v1);
-    readFrame(v1);
     all_frames{i, 2} = readFrame(v2);
-    readFrame(v2);
     all_frames{i, 3} = readFrame(v3);
-    readFrame(v3);
 end
 
 img_mosaic = mymosaic(all_frames);

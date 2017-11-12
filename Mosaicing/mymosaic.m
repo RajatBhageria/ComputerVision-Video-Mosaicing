@@ -14,21 +14,27 @@ function [img_mosaic] = mymosaic(img_input)
 % n = 3 if the number of input videos is 3 
 [m,~] = size(img_input); 
 
-max_pts = 300; 
+max_pts = 500; 
 
 img_mosaic = cell(m,1); 
 
 %% Loop over all the frames
-for i = 1:10
+for i = 1:m
     %% Find the image 
     img1 = img_input{i,1};
     img2 = img_input{i,2};
     img3 = img_input{i,3};
     
     %% Grayscale the image 
-    img1G = rgb2gray(img1);
-    img2G = rgb2gray(img2);
-    img3G = rgb2gray(img3);
+    if size(img1, 3) == 3
+        img1G = rgb2gray(img1);
+    end
+    if size(img2, 3) == 3
+        img2G = rgb2gray(img2);
+    end
+    if size(img3, 3) == 3
+        img3G = rgb2gray(img3);
+    end
 
     %% find corners for image 
     cimg1 = corner_detector(img1G);

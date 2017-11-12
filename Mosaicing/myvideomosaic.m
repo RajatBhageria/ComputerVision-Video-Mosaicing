@@ -13,7 +13,7 @@ end
 close(h_avi);
 
 %%CHECK!!! 
-video_mosaic = h_avi.path; 
+video_mosaic = h_avi.Path; 
 
 clear h_avi;
 end
