@@ -65,7 +65,7 @@ for iter = 1:nRANSAC
         %bestHomography = homographyForSample; 
         inlier_ind = indexes((x2-XDest).^2 + (y2-YDest).^2 < thresh);
     end 
-end 
+end
 %H = bestHomography; 
 H = est_homography(x1(inlier_ind),y1(inlier_ind), x2(inlier_ind), y2(inlier_ind));
 
